@@ -15,6 +15,14 @@ class consumer:
   learning_rate = .8 #rate at which it values new data
   discount_rate = .2 #rate at which it values future benefit
 
+  priceg1 = 1
+  priceg2 = 1
+  priceg3 = 1
+
+  curve1 = []
+  curve2 = []
+  curve3 = []
+
   def __init__(self):
     print(self.q_table)
 
@@ -23,23 +31,31 @@ class consumer:
     range2 = range(0, price2, step)
     range3 = range(0, price3, step)
 
-
-                    for i in range(500): #number of iterations at each price set
-                      if(self.epsilon > random.random()): #should we explore or not
-                        if i % 2 == 0:
-                          self.sell(random.randint(0,len(self.q_table[0])-1))
-                        else:
-                          self.buy_rand(ben1, ben2, ben3)
-                      else:
-                        if i % 2 == 0:
-                          self.sell(self.max_col(self.q_table[0]))
-                        else:
-                          self.buy(ben1, ben2, ben3)
-
-      self.epsilon -= .001
-      self.learning_rate -= .002
-      self.discount_rate -= .002
-      print(self.q_table)
+    for i in range1:
+      for j in range2:
+        for k in range3:
+          self.priceg1 = i
+          self.priceg2 = j
+          self.priceg2 = k
+          for i in range(500): #number of iterations at each price set
+            if(self.epsilon > random.random()): #should we explore or not
+              if i % 2 == 0:
+                self.sell(random.randint(0,len(self.q_table[0])-1))
+              else:
+                self.buy_rand(ben1, ben2, ben3)
+            else:
+              if i % 2 == 0:
+                self.sell(self.max_col(self.q_table[0]))
+              else:
+                self.buy(ben1, ben2, ben3)
+            self.curve1.append((i, max_col(q_table[1])))
+            self.curve2.append((j, max_col(q_table[2])))
+            self.curve3.append((k, max_col(q_table[3])))
+            self.epsilon -= .001
+            self.learning_rate -= .002
+            self.discount_rate -= .002
+            print(self.q_table)
+            print()
 
   def sell(self, col):
     self.daily_effort -= col
@@ -55,7 +71,7 @@ class consumer:
         x = random.randint(0, self.wealth)
         if x > 4:
             x = 4
-        self.wealth -= x
+        self.wealth -= x*self.priceg1
         print("line 57", x, self.wealth)
         self.q_table[1][x] = self.q_table[1][x] + self.learning_rate*(x * b1 + \
         self.discount_rate*(self.q_table[2][self.max_col(self.q_table[2][:(self.wealth + 1)])] - self.q_table[1][x]))
@@ -66,7 +82,7 @@ class consumer:
         x = random.randint(0, self.wealth)
         if x > 4:
             x = 4
-        self.wealth -= x
+        self.wealth -= x*self.priceg2
         self.q_table[2][x] = self.q_table[2][x] + self.learning_rate*(x * b2 + \
         self.discount_rate*(self.q_table[3][self.max_col(self.q_table[3][:(self.wealth + 1)])] - self.q_table[2][x]))
 
@@ -76,7 +92,7 @@ class consumer:
         x = random.randint(0, self.wealth)
         if x > 4:
             x = 4
-        self.wealth -= x
+        self.wealth -= x*self.priceg3
         print("wealth",self.wealth)
         self.q_table[3][x] = self.q_table[3][x] + self.learning_rate*(x * b3 + \
         self.discount_rate*(self.q_table[1][self.max_col(self.q_table[1][:\
@@ -89,19 +105,19 @@ class consumer:
 
     print(self.wealth)
     x = self.max_col(self.q_table[1][:self.wealth + 1])
-    self.wealth -= x
+    self.wealth -= x*self.priceg1
     self.q_table[1][x] = self.q_table[1][x] + self.learning_rate*(x * b1 + \
     self.discount_rate*(self.q_table[2][self.max_col(self.q_table[2][:(self.wealth + 1)])] - self.q_table[1][x]))
 
     if self.wealth >= 0:
         x = self.max_col(self.q_table[2][:self.wealth + 1])
-        self.wealth -= x
+        self.wealth -= x*self.priceg2
         self.q_table[2][x] = self.q_table[2][x] + self.learning_rate*(x * b2 + \
         self.discount_rate*(self.q_table[3][self.max_col(self.q_table[3][:(self.wealth + 1)])] - self.q_table[2][x]))
 
     if self.wealth >= 0:
         x = self.max_col(self.q_table[3][:self.wealth + 1])
-        self.wealth -= x
+        self.wealth -= x*self.priceg3
         print("line 101: ", x,self.wealth)
         self.q_table[3][x] = self.q_table[3][x] + self.learning_rate*(x * b3 + \
         self.discount_rate*(self.q_table[1][self.max_col(self.q_table[1][:\
@@ -116,3 +132,6 @@ class consumer:
         max_col_index = i
 
     return max_col_index
+
+    def get_curve1(self):
+        pass
